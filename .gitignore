@@ -26,7 +26,6 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
-.idea
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -128,3 +127,24 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Vue stuff
+.DS_Store
+node_modules
+/dist
+/build
+package-lock.json
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

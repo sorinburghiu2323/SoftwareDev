@@ -1,0 +1,72 @@
+Table User {
+  id integer
+  email email
+  password password
+  username varchar
+  first_name varchar
+  last_name varchar
+  points integer
+  is_teacher boolean
+  hide_leaderboard boolean
+  created_at timestamp
+}
+
+Table Community {
+  id integer
+  user_creator integer
+  name varchar
+  description text
+  created_at timestamp
+}
+
+Table Post {
+  id integer
+  user integer
+  community integer
+  title varchar
+  description text
+  post_type enum
+  created_at timestamp
+}
+
+Table PostLike {
+  id integer
+  user integer
+  post integer
+  created_at timestamp
+}
+
+Table PostComment {
+  id integer
+  user integer
+  post integer
+  comment text
+  is_approved boolean
+  created_at timestamp
+}
+
+Table PostCommentLike {
+  id integer
+  user integer
+  post_comment integer
+  created_at timestamp
+}
+
+
+Ref: "User"."id" < "Community"."user_creator"
+
+Ref: "User"."id" < "Post"."user"
+
+Ref: "Community"."id" < "Post"."community"
+
+Ref: "User"."id" < "PostLike"."user"
+
+Ref: "Post"."id" < "PostLike"."post"
+
+Ref: "User"."id" < "PostComment"."user"
+
+Ref: "Post"."id" < "PostComment"."post"
+
+Ref: "PostComment"."id" < "PostCommentLike"."post_comment"
+
+Ref: "User"."id" < "PostCommentLike"."user"

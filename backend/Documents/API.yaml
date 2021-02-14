@@ -1,0 +1,12 @@
+openapi: 3.0.0
+info:
+  title: API
+  version: '1.0'
+  contact:
+    name: Group D Team
+  description: ''
+servers:
+  - url: 'http://localhost:3000'
+paths: {}
+components:
+  schemas: {}
