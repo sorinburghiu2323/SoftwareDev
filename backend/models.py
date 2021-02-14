@@ -44,11 +44,11 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
 	email = models.EmailField(unique=True)
-	password = models.CharField(blank=True)
+	password = models.CharField(blank=True, max_length=255)
 	username = models.CharField(max_length=255, unique=True)
 	first_name = models.CharField(max_length=255)
 	last_name = models.CharField(max_length=255)
-	points = models.IntegerField(max_length=255)
+	points = models.IntegerField(default=0)
 	is_teacher = models.BooleanField(default=False)
 	hide_leaderboard = models.BooleanField(default=False)
 
@@ -69,7 +69,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 # Community Class
 class Community(models.Model):
-	user = models.ForeignKey(User, on_delete=models.SET_NULL)  # Creator of the community
+	user = models.ForeignKey(User, on_delete=models.CASCADE)  # Creator of the community
 	name = models.CharField(max_length=255)
 	description = models.TextField(max_length=255)
 	created_at = models.DateTimeField(default=timezone.now)
@@ -86,21 +86,16 @@ class Community(models.Model):
 		}
 
 
-class PostType(models.TextChoices):
-	DISCUSSION = "discussion"
-	QUESTION = "question"
-
-	@staticmethod
-	def max_length() -> int:
-		return 20
-
-
 class Post(models.Model):
-	user = models.ForeignKey(User, on_delete=models.SET_NULL)
-	community = models.ForeignKey(Community, on_delete=models.SET_NULL)
+	class PostType(models.TextChoices):
+		DISCUSSION = "discussion"
+		QUESTION = "question"
+
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	community = models.ForeignKey(Community, on_delete=models.CASCADE)
 	title = models.CharField(max_length=255, unique=True)
 	description = models.TextField(default=0)
-	post_type = models.ForeignKey(PostType, on_delete=models.CASCADE)  # Might not be right
+	post_type = models.CharField(max_length=20, choices=PostType.choices, default=PostType.DISCUSSION)
 	created_at = models.DateTimeField(default=timezone.now)
 
 	def __str__(self):
@@ -120,7 +115,7 @@ class Post(models.Model):
 # PostLike Class
 class PostLike(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
-	post = models.ForeignKey(Post, on_delete=models.SET_NULL)
+	post = models.ForeignKey(Post, on_delete=models.CASCADE)
 	created_at = models.DateTimeField(default=timezone.now)
 
 	def __str__(self):
@@ -136,8 +131,8 @@ class PostLike(models.Model):
 
 # PostComment Class
 class PostComment(models.Model):
-	user = models.ForeignKey(User, on_delete=models.SET_NULL)
-	post = models.ForeignKey(Post, on_delete=models.SET_NULL)
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	post = models.ForeignKey(Post, on_delete=models.CASCADE)
 	comment = models.TextField(max_length=255, unique=False)
 	is_approved = models.BooleanField(default=0)
 	created_at = models.DateTimeField(default=timezone.now)
@@ -158,7 +153,7 @@ class PostComment(models.Model):
 # PostCommentLike Class
 class PostCommentLike(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
-	post_comment = models.ForeignKey(PostComment, on_delete=models.SET_NULL)
+	post_comment = models.ForeignKey(PostComment, on_delete=models.CASCADE)
 	created_at = models.DateTimeField(default=timezone.now)
 
 	def __str__(self):
